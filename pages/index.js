@@ -443,9 +443,14 @@ function ToolFor({ tech }) {
 }
 
 function Modal({ tech, onClose }) {
+  const [fullscreen, setFullscreen] = useState(false);
+
   useEffect(() => {
     function onKey(e) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        if (fullscreen) setFullscreen(false);
+        else onClose();
+      }
     }
     document.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
@@ -454,12 +459,27 @@ function Modal({ tech, onClose }) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [onClose]);
+  }, [onClose, fullscreen]);
 
   return (
-    <div className="overlay" onClick={onClose}>
-      <div className="modal" role="dialog" aria-modal="true" aria-label={tech.title} onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
+    <div className={"overlay" + (fullscreen ? " overlay--full" : "")} onClick={onClose}>
+      <div
+        className={"modal" + (fullscreen ? " modal--full" : "")}
+        role="dialog"
+        aria-modal="true"
+        aria-label={tech.title}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-actions">
+          <button
+            className="modal-icon-btn"
+            onClick={() => setFullscreen((f) => !f)}
+            aria-label={fullscreen ? "Exit full screen" : "Full screen"}
+          >
+            {fullscreen ? "⤡" : "⤢"}
+          </button>
+          <button className="modal-icon-btn" onClick={onClose} aria-label="Close">✕</button>
+        </div>
         <div className="modal-icon">{tech.icon}</div>
         <h2>{tech.title}</h2>
         {tech.body.map((p, i) => (
@@ -611,13 +631,25 @@ footer {
   position: relative;
   box-shadow: 0 30px 80px rgba(0,0,0,0.35);
 }
-.modal-close {
+.modal-actions {
   position: absolute; top: 16px; right: 16px;
+  display: flex; gap: 8px;
+}
+.modal-icon-btn {
   width: 32px; height: 32px; border-radius: 50%;
   border: none; background: var(--accent-soft); color: var(--text);
   font-size: 14px; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
 }
+.modal--full {
+  max-width: 680px; width: 100%; height: 100%; max-height: 100%;
+  border-radius: 0;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 48px 40px;
+}
+.overlay--full { padding: 0; }
 .modal-icon { font-size: 34px; }
 .modal h2 { font-size: 21px; margin: 10px 0 14px; }
 .modal-body-p { font-size: 14.5px; line-height: 1.65; color: var(--text-soft); margin: 0 0 12px; }
