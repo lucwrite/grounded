@@ -480,26 +480,28 @@ function Modal({ tech, onClose }) {
           </button>
           <button className="modal-icon-btn" onClick={onClose} aria-label="Close">✕</button>
         </div>
-        <div className="modal-icon">{tech.icon}</div>
-        <h2>{tech.title}</h2>
-        {tech.body.map((p, i) => (
-          <p className="modal-body-p" key={i}>{p}</p>
-        ))}
-        {tech.quote && <blockquote className="modal-quote">{tech.quote}</blockquote>}
-        {tech.quotes && tech.quotes.map((q, i) => (
-          <blockquote className="modal-quote" key={i}>{q}</blockquote>
-        ))}
-        {tech.list && (
-          <ul className="modal-list">
-            {tech.list.map((l, i) => (
-              <li key={i}>{l}</li>
-            ))}
-          </ul>
-        )}
-        {tech.tailBody && <p className="modal-body-p">{tech.tailBody}</p>}
-        {tech.safety && <div className="modal-safety">⚠️ {tech.safety}</div>}
-        <div className="modal-tool-wrap">
-          <ToolFor key={tech.id} tech={tech} />
+        <div className="modal-content">
+          <div className="modal-icon">{tech.icon}</div>
+          <h2>{tech.title}</h2>
+          {tech.body.map((p, i) => (
+            <p className="modal-body-p" key={i}>{p}</p>
+          ))}
+          {tech.quote && <blockquote className="modal-quote">{tech.quote}</blockquote>}
+          {tech.quotes && tech.quotes.map((q, i) => (
+            <blockquote className="modal-quote" key={i}>{q}</blockquote>
+          ))}
+          {tech.list && (
+            <ul className="modal-list">
+              {tech.list.map((l, i) => (
+                <li key={i}>{l}</li>
+              ))}
+            </ul>
+          )}
+          {tech.tailBody && <p className="modal-body-p">{tech.tailBody}</p>}
+          {tech.safety && <div className="modal-safety">⚠️ {tech.safety}</div>}
+          <div className="modal-tool-wrap">
+            <ToolFor key={tech.id} tech={tech} />
+          </div>
         </div>
       </div>
     </div>
@@ -642,14 +644,48 @@ footer {
   display: flex; align-items: center; justify-content: center;
 }
 .modal--full {
-  max-width: 680px; width: 100%; height: 100%; max-height: 100%;
+  max-width: 100%; width: 100%; height: 100%; max-height: 100%;
   border-radius: 0;
   display: flex; flex-direction: column;
-  justify-content: center;
   overflow-y: auto;
-  padding: 48px 40px;
+  padding: 0;
 }
 .overlay--full { padding: 0; }
+.modal--full .modal-content {
+  flex: 1;
+  width: 100%;
+  max-width: min(760px, 94vw);
+  margin: 0 auto;
+  padding: clamp(16px, 3.5vh, 40px) clamp(20px, 4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(2px, 0.6vh, 8px);
+}
+.modal--full .modal-icon { font-size: clamp(28px, 3.6vw, 40px); }
+.modal--full h2 { font-size: clamp(22px, 3vw, 32px); margin: 4px 0 8px; }
+.modal--full .modal-body-p { font-size: clamp(15px, 1.6vw, 18px); line-height: 1.6; margin: 0 0 8px; }
+.modal--full .modal-quote { font-size: clamp(14px, 1.5vw, 17px); padding: clamp(10px, 1.4vw, 16px) clamp(14px, 1.8vw, 20px); }
+.modal--full .modal-list { font-size: clamp(14px, 1.5vw, 17px); line-height: 1.6; }
+.modal--full .modal-safety { font-size: clamp(13px, 1.3vw, 15px); padding: clamp(10px, 1.2vw, 14px) clamp(14px, 1.6vw, 18px); margin-bottom: 10px; }
+.modal--full .tool-label { font-size: clamp(13px, 1.4vw, 16px); }
+.modal--full .tool-note,
+.modal--full .breath-meta,
+.modal--full .step-progress { font-size: clamp(12px, 1.2vw, 14px); }
+.modal--full .tool-done { font-size: clamp(14px, 1.6vw, 18px); }
+.modal--full .btn { font-size: clamp(13px, 1.4vw, 15px); padding: clamp(9px, 1.2vw, 12px) clamp(16px, 2vw, 22px); }
+.modal--full .breath-circle-wrap,
+.modal--full .breath-circle {
+  --circle-base: clamp(120px, 16vw, 190px);
+}
+.modal--full .tool { gap: clamp(6px, 1vh, 12px); }
+.modal--full .modal-tool-wrap { padding-top: clamp(10px, 1.6vh, 18px); }
+.modal--full .breath-phase-label { font-size: clamp(13px, 1.6vw, 17px); }
+.modal--full .breath-seconds { font-size: clamp(24px, 3.6vw, 40px); }
+.modal--full .countdown-display { font-size: clamp(34px, 5vw, 60px); }
+.modal--full .chip { font-size: clamp(12px, 1.3vw, 15px); padding: clamp(6px, 0.9vw, 9px) clamp(12px, 1.6vw, 18px); }
+.modal--full .step-title { font-size: clamp(18px, 2.2vw, 24px); }
+.modal--full .step-body { font-size: clamp(14px, 1.6vw, 17px); }
 .modal-icon { font-size: 34px; }
 .modal h2 { font-size: 21px; margin: 10px 0 14px; }
 .modal-body-p { font-size: 14.5px; line-height: 1.65; color: var(--text-soft); margin: 0 0 12px; }
@@ -681,12 +717,14 @@ footer {
 .btn:disabled { opacity: 0.4; cursor: default; }
 
 .breath-circle-wrap {
-  width: 230px; height: 230px;
+  --circle-base: 150px;
+  width: calc(var(--circle-base) * 1.53); height: calc(var(--circle-base) * 1.53);
   display: flex; align-items: center; justify-content: center;
   margin: 6px 0 2px;
 }
 .breath-circle {
-  width: 150px; height: 150px; border-radius: 50%;
+  --circle-base: 150px;
+  width: var(--circle-base); height: var(--circle-base); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   transition-property: transform; transition-timing-function: ease-in-out;
 }
