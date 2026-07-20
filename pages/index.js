@@ -160,6 +160,43 @@ const TECHNIQUES = [
     defaultSeconds: 300,
     timerLabel: "Optional: pause before you decide",
   },
+  {
+    id: "butterfly-hug",
+    icon: "🦋",
+    title: "Butterfly Hug",
+    teaser: "Cross your arms and tap gently, left-right, to self-soothe.",
+    body: [
+      "Cross your arms over your chest, hands resting near your opposite shoulders. Alternate gently tapping your left and right sides, like a slow, steady heartbeat.",
+      "This alternating touch is a simple self-soothing technique that can help calm the nervous system when things feel like too much.",
+    ],
+    safety: "Stop if the tapping feels overstimulating rather than calming — not every grounding technique works the same way for everyone.",
+    type: "breathing",
+    phases: [
+      { label: "Tap: left", seconds: 1, scale: 1.12 },
+      { label: "Tap: right", seconds: 1, scale: 1 },
+    ],
+    totalRounds: 20,
+    variant: "tap",
+    doneMessage: "Well done — pause and notice how you feel.",
+  },
+  {
+    id: "categories-game",
+    icon: "🧩",
+    title: "Categories Game",
+    teaser: "Silently list items in a category to interrupt racing thoughts.",
+    body: [
+      "When you can't focus on your breath or senses — like when you're driving or in a meeting — try a short mental game instead. Silently list as many items as you can in a category before moving to the next one.",
+      "This keeps your working memory occupied with something neutral, which can help crowd out anxious or racing thoughts.",
+    ],
+    type: "steps",
+    steps: [
+      { title: "Animals", body: "Silently name as many animals as you can think of." },
+      { title: "Foods", body: "Silently name as many foods as you can think of." },
+      { title: "Colours", body: "Silently name as many colours as you can think of." },
+      { title: "Places", body: "Silently name as many countries or cities as you can think of." },
+      { title: "Things in this room", body: "Silently name as many objects around you as you can think of." },
+    ],
+  },
 ];
 
 function formatSeconds(totalSeconds) {
@@ -385,7 +422,15 @@ function PMRList({ steps }) {
 function ToolFor({ tech }) {
   switch (tech.type) {
     case "breathing":
-      return <BreathingTool phases={tech.phases} totalRounds={tech.totalRounds} note={tech.note} doneMessage={tech.doneMessage} />;
+      return (
+        <BreathingTool
+          phases={tech.phases}
+          totalRounds={tech.totalRounds}
+          note={tech.note}
+          doneMessage={tech.doneMessage}
+          variant={tech.variant || "breath"}
+        />
+      );
     case "countdown":
       return <CountdownTool options={tech.options} defaultSeconds={tech.defaultSeconds} label={tech.timerLabel} />;
     case "steps":
@@ -615,6 +660,7 @@ footer {
 }
 .breath-circle--breath { background: radial-gradient(circle at 35% 30%, #b9c6ff, var(--accent)); }
 .breath-circle--pulse { background: radial-gradient(circle at 35% 30%, #ffd9a0, #e8a33f); }
+.breath-circle--tap { background: radial-gradient(circle at 35% 30%, #a7f3d0, #10b981); }
 .breath-circle-inner { color: #fff; text-align: center; }
 .breath-phase-label { font-size: 13.5px; font-weight: 700; }
 .breath-seconds { font-size: 26px; font-weight: 800; }
