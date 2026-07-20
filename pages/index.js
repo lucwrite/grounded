@@ -6,6 +6,8 @@ const TECHNIQUES = [
     id: "box-breathing",
     icon: "🫁",
     title: "Box Breathing",
+    tag: "~2 min",
+    symptoms: ["panic"],
     teaser: "4-4-4-4 breathing to settle stress and panic symptoms.",
     body: [
       "Breathe in for 4 seconds, hold for 4, breathe out for 4, and hold for 4. Repeat for four to six rounds.",
@@ -26,6 +28,8 @@ const TECHNIQUES = [
     id: "longer-exhale",
     icon: "🌬️",
     title: "Longer-Exhale Breathing",
+    tag: "2–5 min",
+    symptoms: ["panic"],
     teaser: "Inhale 4s, exhale 6–8s — often easier than box breathing.",
     body: [
       "Breathe in gently through your nose for 4 seconds, then breathe out for 6 to 8 seconds. Repeat for two to five minutes.",
@@ -43,6 +47,8 @@ const TECHNIQUES = [
     id: "cold-face",
     icon: "❄️",
     title: "Cold-Face Reset",
+    tag: "Needs water",
+    symptoms: ["panic", "body-tension"],
     teaser: "Cool water or a damp cloth to interrupt a spike fast.",
     body: [
       "Splash cool water on your face, or hold a cool, damp cloth over your eyes and cheeks for 10 to 20 seconds. Pause, breathe normally, and repeat if helpful.",
@@ -58,6 +64,8 @@ const TECHNIQUES = [
     id: "grounding-54321",
     icon: "🖐️",
     title: "5-4-3-2-1 Grounding",
+    tag: "Anywhere",
+    symptoms: ["disconnection", "racing-thoughts"],
     teaser: "Notice 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste.",
     body: [
       "Slowly work through your senses. Describe specific details — texture, shape, temperature, distance, colour. Sensory grounding redirects attention toward your immediate surroundings.",
@@ -75,6 +83,8 @@ const TECHNIQUES = [
     id: "pmr",
     icon: "💪",
     title: "Progressive Muscle Relaxation",
+    tag: "~5 min",
+    symptoms: ["body-tension"],
     teaser: "Tense and release muscle groups to release physical tension.",
     body: [
       "Starting with your hands, gently tense one muscle group for about five seconds, then release it for 10 to 15 seconds and notice the difference. Continue through your arms, shoulders, face, stomach, and legs.",
@@ -94,6 +104,8 @@ const TECHNIQUES = [
     id: "orienting",
     icon: "🧭",
     title: "Orienting to the Present",
+    tag: "Anywhere",
+    symptoms: ["disconnection"],
     teaser: "State basic facts aloud to reconnect with here and now.",
     body: ["Look around and state basic facts aloud, for example:"],
     quote: "My name is [your name]. It is [today]. I am in [this room]. My feet are on the floor. I am experiencing anxiety, and I am safe enough to pause.",
@@ -105,6 +117,8 @@ const TECHNIQUES = [
     id: "rhythmic-movement",
     icon: "🚶",
     title: "Rhythmic Movement",
+    tag: "Movement",
+    symptoms: ["body-tension"],
     teaser: "Walk, march, or shake it out to burn off adrenaline.",
     body: [
       "Walk briskly, climb stairs, shake out your arms, do wall pushes, or march in place for several minutes. Concentrate on the repeated motion and the contact between your feet and the ground.",
@@ -120,6 +134,8 @@ const TECHNIQUES = [
     id: "mindful-observation",
     icon: "🔍",
     title: "Mindful Observation",
+    tag: "~1–2 min",
+    symptoms: ["racing-thoughts"],
     teaser: "Study one object closely to anchor a racing mind.",
     body: [
       "Pick one object and study it for one to two minutes. Notice its colour, shadows, texture, edges, weight, and imperfections. Whenever your thoughts return to the upsetting situation, gently return to the object.",
@@ -133,6 +149,8 @@ const TECHNIQUES = [
     id: "calming-place",
     icon: "🏞️",
     title: "Calming-Place Visualization",
+    tag: "Eyes closed",
+    symptoms: ["disconnection"],
     teaser: "Build a safe place in your senses and rest there a moment.",
     body: [
       "Imagine a real or invented place where you feel secure. Build the scene through your senses, then picture yourself breathing slowly and moving safely through that location.",
@@ -148,6 +166,8 @@ const TECHNIQUES = [
     id: "name-normalize-delay",
     icon: "🏷️",
     title: "Name, Normalize, and Delay",
+    tag: "Anywhere",
+    symptoms: ["racing-thoughts"],
     teaser: "Put the feeling into words without needing to act on it.",
     body: ["Put the experience into words, for example:"],
     quotes: [
@@ -164,6 +184,8 @@ const TECHNIQUES = [
     id: "butterfly-hug",
     icon: "🦋",
     title: "Butterfly Hug",
+    tag: "~1 min",
+    symptoms: ["body-tension", "panic"],
     teaser: "Cross your arms and tap gently, left-right, to self-soothe.",
     body: [
       "Cross your arms over your chest, hands resting near your opposite shoulders. Alternate gently tapping your left and right sides, like a slow, steady heartbeat.",
@@ -183,6 +205,8 @@ const TECHNIQUES = [
     id: "categories-game",
     icon: "🧩",
     title: "Categories Game",
+    tag: "Anywhere",
+    symptoms: ["racing-thoughts"],
     teaser: "Silently list items in a category to interrupt racing thoughts.",
     body: [
       "When you can't focus on your breath or senses — like when you're driving or in a meeting — try a short mental game instead. Silently list as many items as you can in a category before moving to the next one.",
@@ -197,6 +221,13 @@ const TECHNIQUES = [
       { title: "Things in this room", body: "Silently name as many objects around you as you can think of." },
     ],
   },
+];
+
+const SYMPTOMS = [
+  { id: "racing-thoughts", label: "Racing thoughts" },
+  { id: "body-tension", label: "Body tension" },
+  { id: "panic", label: "Panic" },
+  { id: "disconnection", label: "Disconnection" },
 ];
 
 function formatSeconds(totalSeconds) {
@@ -481,7 +512,7 @@ function Modal({ tech, onClose }) {
           <button className="modal-icon-btn" onClick={onClose} aria-label="Close">✕</button>
         </div>
         <div className="modal-content">
-          <div className="modal-icon">{tech.icon}</div>
+          <div className="modal-icon" aria-hidden="true">{tech.icon}</div>
           <h2>{tech.title}</h2>
           {tech.body.map((p, i) => (
             <p className="modal-body-p" key={i}>{p}</p>
@@ -508,9 +539,30 @@ function Modal({ tech, onClose }) {
   );
 }
 
+function TechniqueCard({ tech, onOpen, suggested }) {
+  return (
+    <button
+      className={"card" + (suggested ? " card--suggested" : "")}
+      onClick={() => onOpen(tech.id)}
+    >
+      <div className="card-icon" aria-hidden="true">{tech.icon}</div>
+      <h3>{tech.title}</h3>
+      <p>{tech.teaser}</p>
+      <div className="card-meta">
+        <span className="card-tag">{tech.tag}</span>
+        <span className="card-cta">Start →</span>
+      </div>
+    </button>
+  );
+}
+
 export default function Home() {
   const [activeId, setActiveId] = useState(null);
+  const [selectedSymptom, setSelectedSymptom] = useState(null);
   const active = TECHNIQUES.find((t) => t.id === activeId) || null;
+  const suggested = selectedSymptom
+    ? TECHNIQUES.filter((t) => t.symptoms && t.symptoms.includes(selectedSymptom)).slice(0, 3)
+    : [];
 
   return (
     <>
@@ -577,6 +629,39 @@ header .tagline { font-size: 15px; color: var(--text-soft); margin: 8px 0 0; }
 
 main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 24px; }
 
+.hero { text-align: center; margin: 4px 0 36px; }
+.hero-btn {
+  border: none; border-radius: 999px; background: var(--accent); color: #fff;
+  font-family: inherit; font-size: 17px; font-weight: 800; cursor: pointer;
+  padding: 16px 34px; box-shadow: 0 14px 30px rgba(91,107,214,0.32);
+  transition: transform 0.15s ease;
+}
+.hero-btn:hover { transform: translateY(-2px); }
+.hero-btn:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 3px; }
+.hero-sub { font-size: 13px; color: var(--text-soft); margin: 12px 0 0; }
+
+.section-label {
+  font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-soft); text-align: center; margin: 0 0 14px;
+}
+
+.symptom-picker { margin-bottom: 32px; }
+.symptom-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.symptom-chip {
+  border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text);
+  border-radius: 999px; padding: 10px 20px; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit; backdrop-filter: blur(8px);
+}
+.symptom-chip-active { background: var(--accent); color: #fff; border-color: transparent; }
+.symptom-chip:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; }
+
+.suggested { margin-bottom: 36px; }
+.suggested-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px; max-width: 780px; margin: 0 auto;
+}
+.card--suggested { border-color: var(--accent); box-shadow: 0 16px 32px rgba(91,107,214,0.2); }
+
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
 
 .card {
@@ -598,20 +683,37 @@ main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 24px; }
 }
 .card:hover, .card:focus-visible { transform: translateY(-3px); box-shadow: 0 18px 34px rgba(60,70,110,0.16); }
 .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.card-icon { font-size: 30px; }
-.card h2 { font-size: 17px; margin: 4px 0 0; font-weight: 700; }
+.card-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 27px; }
+.card h3 { font-size: 17px; margin: 4px 0 0; font-weight: 700; }
 .card p { font-size: 13.5px; color: var(--text-soft); line-height: 1.45; margin: 0; flex: 1; }
-.card-cta { font-size: 13px; font-weight: 700; color: var(--accent-strong); margin-top: 6px; }
+.card-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 8px; margin-top: 6px; }
+.card-tag {
+  font-size: 11px; font-weight: 700; color: var(--accent-strong); background: var(--accent-soft);
+  padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+}
+.card-cta { font-size: 13px; font-weight: 700; color: var(--accent-strong); }
 
-footer {
+.footer {
   max-width: 720px;
-  margin: 20px auto 60px;
+  margin: 20px auto 0;
   padding: 0 24px;
   text-align: center;
   font-size: 12.5px;
   line-height: 1.6;
   color: var(--text-soft);
 }
+.urgent-support {
+  max-width: 640px;
+  margin: 18px auto 60px;
+  padding: 16px 22px;
+  background: var(--safety-bg);
+  color: var(--safety-text);
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+.urgent-support a { color: inherit; font-weight: 700; text-decoration: underline; }
 
 .overlay {
   position: fixed; inset: 0;
@@ -766,22 +868,58 @@ footer {
       </header>
 
       <main>
-        <div className="grid">
-          {TECHNIQUES.map((t) => (
-            <button key={t.id} className="card" onClick={() => setActiveId(t.id)}>
-              <div className="card-icon">{t.icon}</div>
-              <h2>{t.title}</h2>
-              <p>{t.teaser}</p>
-              <span className="card-cta">Begin →</span>
-            </button>
-          ))}
-        </div>
+        <section className="hero">
+          <button className="hero-btn" onClick={() => setActiveId("longer-exhale")}>
+            Start with a simple reset →
+          </button>
+          <p className="hero-sub">Not sure where to begin? This is a gentle breathing exercise to try first.</p>
+        </section>
+
+        <section className="symptom-picker">
+          <h2 className="section-label">What feels strongest right now?</h2>
+          <div className="symptom-row">
+            {SYMPTOMS.map((s) => (
+              <button
+                key={s.id}
+                className={"symptom-chip" + (selectedSymptom === s.id ? " symptom-chip-active" : "")}
+                aria-pressed={selectedSymptom === s.id}
+                onClick={() => setSelectedSymptom((cur) => (cur === s.id ? null : s.id))}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {suggested.length > 0 && (
+          <section className="suggested">
+            <h2 className="section-label">Suggested for you</h2>
+            <div className="suggested-grid">
+              {suggested.map((t) => (
+                <TechniqueCard key={t.id} tech={t} onOpen={setActiveId} suggested />
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section>
+          <h2 className="section-label">All techniques</h2>
+          <div className="grid">
+            {TECHNIQUES.map((t) => (
+              <TechniqueCard key={t.id} tech={t} onOpen={setActiveId} />
+            ))}
+          </div>
+        </section>
       </main>
 
-      <footer>
+      <footer className="footer">
         These techniques can help in the moment, but they aren't a substitute for professional support.
-        If you're in crisis, please contact a crisis line or emergency services in your area.
       </footer>
+      <div className="urgent-support">
+        <strong>If you're in crisis:</strong> call or text <strong>988</strong> (US &amp; Canada), free and available
+        24/7. Outside North America, find a local helpline at{" "}
+        <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer">findahelpline.com</a>.
+      </div>
 
       {active && <Modal tech={active} onClose={() => setActiveId(null)} />}
     </>
